@@ -12,8 +12,8 @@ chuyển project bằng fuzzy search, lưu và khôi phục nguyên bố cục p
 ## Cài đặt
 
 ```sh
-git clone git@github.com:bdkha/wezterm.git ~/Code/wezterm
-cd ~/Code/wezterm
+git clone git@github.com:bdkha/wezterm-config.git ~/Code/wezterm-config
+cd ~/Code/wezterm-config
 ```
 
 **macOS / Linux**
