@@ -49,6 +49,7 @@ cp local.lua.example local.lua
 ```lua
 return {
 	font_size = 13.5,
+	theme = "dark",                     -- "auto" | "dark" | "light"
 	opacity = 0.92,                     -- nền trong + mờ hậu cảnh
 	project_roots = { "D:/Code", "D:/Product" },
 }
@@ -150,5 +151,6 @@ local.lua.example      mẫu ghi đè cho từng máy
 | Tab và status bar hiện ô vuông | Chưa có Nerd Font. Chạy installer với `--font` / `-Font`, rồi mở lại WezTerm |
 | Thư mục trên status bar đứng im | Shell chưa phát OSC 7, xem mục trên |
 | Cửa sổ nhấp nháy, dựng hình sai | Đặt `front_end = "OpenGL"` trong `local.lua` |
+| Nền sáng trắng dù hệ thống để dark | Đặt `theme = "dark"` trong `local.lua`. Trên Windows theme được đọc thẳng từ registry vì `wezterm.gui.get_appearance()` trả sai khi chưa có cửa sổ nào |
 | Sửa config mà không thấy đổi | Nhiều khả năng lỗi cú pháp. Chạy `wezterm ls-fonts` để đọc lỗi kèm số dòng |
 | `Ctrl+A` không về đầu dòng nữa | Đúng thiết kế, nó là leader. Bấm `Ctrl+A` rồi `A` để gửi xuống shell |

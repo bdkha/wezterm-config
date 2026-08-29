@@ -28,6 +28,9 @@ local platform = require("config.platform")
 local opts = {
 	font_size = 12.0,
 
+	-- "auto" theo hệ điều hành, hoặc ghim cứng "dark" / "light".
+	theme = "auto",
+
 	-- 1.0 = nền đục hoàn toàn. Hạ xuống ~0.92 để nền trong,
 	-- hiệu ứng mờ sẽ tự bật theo hệ điều hành.
 	opacity = 1.0,
@@ -63,6 +66,7 @@ if ok and type(overrides) == "table" then
 	end
 end
 
+require("config.theme").set_mode(opts.theme)
 require("config.appearance").apply(config, opts)
 require("config.launch").apply(config, opts)
 require("config.workspaces").set_roots(opts.project_roots)

@@ -7,6 +7,9 @@
 return {
 	-- font_size = 13.5,
 
+	-- Ghim cứng theme thay vì theo hệ điều hành
+	-- theme = "dark",
+
 	-- Nền trong + hiệu ứng mờ (tự chọn Acrylic trên Windows, blur trên macOS)
 	-- opacity = 0.92,
 
