@@ -259,9 +259,11 @@ local function read_session(path)
 	return nil
 end
 
+--- Chuẩn hoá lúc đọc, để các file session lưu từ bản cũ (có "/D:/..." sai)
+--- vẫn khôi phục đúng chỗ mà không cần sửa tay.
 local function first_cwd(node)
 	if node.leaf then
-		return node.cwd
+		return util.normalize(node.cwd)
 	end
 	return first_cwd(node.a)
 end

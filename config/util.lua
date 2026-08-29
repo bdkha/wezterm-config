@@ -7,12 +7,18 @@ local M = {}
 
 local HOME = platform.home
 
---- Chuẩn hoá path: backslash -> slash, bỏ slash cuối.
+--- Chuẩn hoá path: backslash -> slash, bỏ slash cuối, và bỏ dấu "/" thừa
+--- đứng trước ổ đĩa Windows.
+---
+--- Trên Windows, Url.file_path trả về dạng URL "/D:/Code/x" chứ không phải
+--- "D:/Code/x". Chuỗi đó đem đi spawn hay io.open đều hỏng, nên chặn ngay ở đây
+--- để mọi chỗ dùng path đều nhận được dạng đúng.
 function M.normalize(p)
 	if not p then
 		return nil
 	end
 	p = p:gsub("\\", "/")
+	p = p:gsub("^/([A-Za-z]:)", "%1")
 	if #p > 3 then
 		p = p:gsub("/+$", "")
 	end
@@ -33,9 +39,7 @@ function M.cwd(pane_or_info)
 	end
 	if type(cwd) == "string" then
 		-- bản cũ trả về chuỗi file://host/C:/path
-		cwd = cwd:gsub("^file://[^/]*", "")
-		cwd = cwd:gsub("^/([A-Za-z]:)", "%1")
-		return M.normalize(cwd)
+		return M.normalize((cwd:gsub("^file://[^/]*", "")))
 	end
 	return M.normalize(cwd.file_path)
 end
