@@ -57,18 +57,7 @@ function M.apply(config, opts)
 	-- MÀU
 	----------------------------------------------------------------------
 	config.color_scheme = p.scheme
-	config.colors = {
-		cursor_bg = p.accent,
-		cursor_border = p.accent,
-		cursor_fg = p.crust,
-		selection_bg = p.surface,
-		selection_fg = p.text,
-		split = p.overlay,
-		tab_bar = {
-			background = p.mantle,
-			inactive_tab_edge = p.mantle,
-		},
-	}
+	config.colors = theme.colors_for(p)
 	config.inactive_pane_hsb = { saturation = 0.9, brightness = 0.75 }
 
 	----------------------------------------------------------------------

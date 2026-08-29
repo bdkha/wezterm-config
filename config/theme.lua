@@ -129,6 +129,15 @@ local function derive(name, scheme)
 end
 
 local derived_cache = {}
+local builtin_cache = nil
+
+--- Bảng scheme dựng sẵn của WezTerm. Hơn 1000 cái nên chỉ lấy một lần.
+function M.builtin_schemes()
+	if not builtin_cache then
+		builtin_cache = wezterm.color.get_builtin_schemes()
+	end
+	return builtin_cache
+end
 
 --- Bảng màu cho một scheme. Trả về nil nếu WezTerm không biết tên đó.
 function M.for_scheme(name)
@@ -138,13 +147,67 @@ function M.for_scheme(name)
 	if derived_cache[name] then
 		return derived_cache[name]
 	end
-	local scheme = wezterm.color.get_builtin_schemes()[name]
+	local scheme = M.builtin_schemes()[name]
 	if not scheme then
 		return nil
 	end
 	local palette = derive(name, scheme)
 	derived_cache[name] = palette
 	return palette
+end
+
+--- Khối config.colors ứng với một bảng màu. appearance.lua dùng lúc nạp config,
+--- picker dùng lại y hệt khi preview, để hai đường không lệch nhau.
+function M.colors_for(palette)
+	return {
+		cursor_bg = palette.accent,
+		cursor_border = palette.accent,
+		cursor_fg = palette.crust,
+		selection_bg = palette.surface,
+		selection_fg = palette.text,
+		split = palette.overlay,
+		tab_bar = {
+			background = palette.mantle,
+			inactive_tab_edge = palette.mantle,
+		},
+	}
+end
+
+--- Bảng màu ứng với config hiệu lực của một cửa sổ. Nhờ hàm này mà tab bar
+--- và status bar đi theo cả scheme đang preview, không chỉ scheme đã lưu.
+function M.for_config(cfg)
+	if cfg and cfg.color_scheme then
+		local palette = M.for_scheme(cfg.color_scheme)
+		if palette then
+			return palette
+		end
+	end
+	return M.current()
+end
+
+--- Toàn bộ tên scheme: ưa dùng trước, còn lại xếp theo bảng chữ cái.
+function M.list_all()
+	local schemes = M.builtin_schemes()
+	local seen, ordered = {}, {}
+	for _, name in ipairs(M.favourites) do
+		if schemes[name] and not seen[name] then
+			seen[name] = true
+			table.insert(ordered, name)
+		end
+	end
+	local rest = {}
+	for name in pairs(schemes) do
+		if not seen[name] then
+			table.insert(rest, name)
+		end
+	end
+	table.sort(rest, function(a, b)
+		return a:lower() < b:lower()
+	end)
+	for _, name in ipairs(rest) do
+		table.insert(ordered, name)
+	end
+	return ordered
 end
 
 ----------------------------------------------------------------------

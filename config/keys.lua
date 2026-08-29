@@ -130,7 +130,7 @@ function M.apply(config)
 			action = act.ShowLauncherArgs({ flags = "FUZZY|LAUNCH_MENU_ITEMS|DOMAINS|WORKSPACES" }),
 		},
 		{ key = "u", mods = "LEADER", action = act.CharSelect({ copy_on_select = true }) },
-		{ key = "t", mods = "LEADER", action = theme_picker.pick },
+		{ key = "t", mods = "LEADER", action = theme_picker.enter },
 
 		-- vào chế độ resize
 		{
@@ -144,6 +144,23 @@ function M.apply(config)
 	-- KEY TABLE: resize (Ctrl+A r rồi hjkl / mũi tên, Esc để thoát)
 	------------------------------------------------------------------
 	config.key_tables = {
+		------------------------------------------------------------------
+		-- Duyệt theme có xem trước (Ctrl+A T)
+		------------------------------------------------------------------
+		[theme_picker.KEY_TABLE] = {
+			{ key = "DownArrow", action = theme_picker.next },
+			{ key = "j", action = theme_picker.next },
+			{ key = "UpArrow", action = theme_picker.prev },
+			{ key = "k", action = theme_picker.prev },
+			{ key = "PageDown", action = theme_picker.next_page },
+			{ key = "PageUp", action = theme_picker.prev_page },
+			{ key = "/", action = theme_picker.search },
+			{ key = "0", action = theme_picker.reset },
+			{ key = "Enter", action = theme_picker.commit },
+			{ key = "Escape", action = theme_picker.cancel },
+			{ key = "q", action = theme_picker.cancel },
+		},
+
 		resize = {
 			{ key = "h", action = act.AdjustPaneSize({ "Left", 3 }) },
 			{ key = "l", action = act.AdjustPaneSize({ "Right", 3 }) },

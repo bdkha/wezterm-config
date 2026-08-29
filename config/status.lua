@@ -2,6 +2,7 @@
 local wezterm = require("wezterm")
 local theme = require("config.theme")
 local util = require("config.util")
+local picker = require("config.theme_picker")
 
 local M = {}
 
@@ -32,8 +33,8 @@ local function tab_label(tab)
 	return util.proc_name(pane.foreground_process_name) or "shell"
 end
 
-wezterm.on("format-tab-title", function(tab, _tabs, _panes, _config, _hover, max_width)
-	local p = theme.current()
+wezterm.on("format-tab-title", function(tab, _tabs, _panes, cfg, _hover, max_width)
+	local p = theme.for_config(cfg)
 
 	local bg = tab.is_active and p.accent or p.surface
 	local fg = tab.is_active and p.crust or p.subtext
@@ -69,14 +70,24 @@ end)
 -- STATUS BAR
 ----------------------------------------------------------------------
 wezterm.on("update-status", function(window, pane)
-	local p = theme.current()
+	local previewing = picker.preview_scheme(window:window_id())
+	local p = (previewing and theme.for_scheme(previewing)) or theme.current()
 
 	------------------------------------------------------------------
 	-- TRÁI: báo LEADER đang bật + key table đang active
 	------------------------------------------------------------------
 	local left = {}
 	local kt = window:active_key_table()
-	if kt then
+	local theme_label = picker.browsing_label(window:window_id())
+	if theme_label then
+		table.insert(left, { Background = { Color = p.mauve } })
+		table.insert(left, { Foreground = { Color = p.crust } })
+		table.insert(left, { Attribute = { Intensity = "Bold" } })
+		table.insert(left, { Text = "  THEME  " .. theme_label .. "  " })
+		table.insert(left, { Background = { Color = p.surface } })
+		table.insert(left, { Foreground = { Color = p.subtext } })
+		table.insert(left, { Text = " ↑↓ đổi · / tìm · Enter giữ · Esc huỷ " })
+	elseif kt then
 		table.insert(left, { Background = { Color = p.red } })
 		table.insert(left, { Foreground = { Color = p.crust } })
 		table.insert(left, { Attribute = { Intensity = "Bold" } })
@@ -125,18 +136,6 @@ wezterm.on("update-status", function(window, pane)
 		prev_bg = c.bg
 	end
 	window:set_right_status(wezterm.format(elements))
-end)
-
-----------------------------------------------------------------------
--- Đổi màu ngay khi Windows đổi theme sáng/tối
-----------------------------------------------------------------------
-wezterm.on("window-config-reloaded", function(window)
-	local p = theme.current()
-	local overrides = window:get_config_overrides() or {}
-	if overrides.color_scheme ~= p.scheme then
-		overrides.color_scheme = p.scheme
-		window:set_config_overrides(overrides)
-	end
 end)
 
 return M

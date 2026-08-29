@@ -7,7 +7,7 @@ chuyển project bằng fuzzy search, lưu và khôi phục nguyên bố cục p
 - Status bar hiện workspace, nhánh git và thư mục hiện tại
 - `Ctrl+A W` mở fuzzy switcher quét mọi git repo trong thư mục code của bạn
 - `Ctrl+A Shift+S` / `Shift+R` lưu và dựng lại bố cục pane, đúng tỉ lệ, đúng thư mục
-- `Ctrl+A T` chọn theme từ hơn 1000 color scheme có sẵn của WezTerm
+- `Ctrl+A T` chọn theme có xem trước — màu đổi ngay theo scheme đang trỏ tới
 
 ## Cài đặt
 
@@ -87,8 +87,21 @@ một bản đã lưu.
 
 ### Đổi theme
 
-`Ctrl+A` `T`, gõ để lọc, `Enter`. Mọi cửa sổ đang mở đổi màu ngay. Dòng đầu
-danh sách là "Về mặc định".
+`Ctrl+A` `T` mở chế độ duyệt. Bấm `↓` `↑` hoặc `j` `k` để đi qua từng scheme —
+**cửa sổ đổi màu ngay theo cái đang trỏ tới**, cả nền lẫn tab bar lẫn status bar.
+Tên scheme và vị trí hiện ở góc trái thanh tab.
+
+| Phím | Việc |
+| --- | --- |
+| `↓` `↑` hoặc `j` `k` | scheme kế tiếp / trước đó |
+| `PgDn` `PgUp` | nhảy 20 cái |
+| `/` | fuzzy search — chọn xong nhảy con trỏ tới đó và xem trước tiếp |
+| `Enter` | giữ scheme đang xem, áp cho mọi cửa sổ |
+| `Esc` hoặc `q` | huỷ, trả lại màu như trước khi vào |
+| `0` | về theme mặc định |
+
+Xem trước chỉ tác động lên cửa sổ đang duyệt, các cửa sổ khác giữ nguyên. Chốt
+bằng `Enter` thì mới ghi `theme.txt` và áp cho tất cả.
 
 ### Chỉnh kích thước pane
 
@@ -183,7 +196,7 @@ thanh tab hiện huy hiệu vàng `LEADER`; sau 1,5 giây không bấm gì thì 
 | --- | --- |
 | `Ctrl+A` `C` | tab mới |
 | `Ctrl+A` `,` | đổi tên tab — tên này được lưu vào session |
-| `Ctrl+A` `T` | **chọn theme** |
+| `Ctrl+A` `T` | **chọn theme** — vào chế độ duyệt có xem trước |
 | `Ctrl+A` `K` | command palette — tra mọi lệnh WezTerm khi quên phím |
 | `Ctrl+A` `L` | launcher |
 | `Ctrl+A` `F` | tìm trong scrollback |
@@ -197,9 +210,14 @@ Xem đầy đủ bằng `wezterm show-keys`, thêm `--lua` để lấy dạng d�
 
 Mặc định là **Catppuccin Mocha**, không dò theo hệ điều hành.
 
-`Ctrl+A T` mở picker liệt kê hơn 1000 color scheme có sẵn của WezTerm, vài cái
-hay dùng được đẩy lên đầu. Chọn xong thì mọi cửa sổ đang mở đổi màu ngay, và
-lựa chọn được ghi vào `theme.txt` (gitignore) nên còn nguyên sau khi khởi động lại.
+`Ctrl+A T` mở chế độ duyệt qua hơn 1000 color scheme có sẵn của WezTerm, 15 cái
+hay dùng được đẩy lên đầu. Màu đổi ngay theo scheme đang trỏ tới, `Enter` để giữ,
+`Esc` để trả lại như cũ. Lựa chọn được ghi vào `theme.txt` (gitignore) nên còn
+nguyên sau khi khởi động lại.
+
+`InputSelector` của WezTerm chỉ báo lúc bấm `Enter`, không báo khi con trỏ di
+chuyển, nên không xem trước bên trong nó được. Vì vậy việc duyệt dùng key table
+riêng, còn fuzzy search vẫn là `InputSelector`, mở bằng phím `/`.
 
 Mocha và Latte có bảng màu chỉnh tay. Các scheme còn lại được suy ra từ chính
 nó — nền, chữ và 8 màu ANSI — nên powerline trên status bar luôn hợp tông với
