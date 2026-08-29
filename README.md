@@ -58,37 +58,140 @@ return {
 Khoá nào không khai báo thì giữ mặc định trong `wezterm.lua`. Thư mục nào trong
 `project_roots` không tồn tại trên máy đó sẽ tự bị bỏ qua, nên cứ liệt kê thoải mái.
 
+## Cách dùng
+
+### Mở project
+
+`Ctrl+A` `W`.
+
+Picker quét thư mục `.git` ở độ sâu 1 và 2 dưới mỗi đường dẫn trong
+`project_roots`. Repo con nằm trong repo cha bị bỏ qua — một repo có
+`android/`, `ios/`, `server/` bên trong vẫn chỉ hiện một dòng.
+
+Workspace đang mở xếp trên đầu, phía dưới là project chưa mở. Gõ vài chữ để
+lọc, `Enter` để mở. Project chưa mở sẽ thành một workspace mới đặt tên theo
+thư mục, shell mở sẵn ngay tại đó. Tên workspace hiện ở ô ngoài cùng bên phải
+thanh trạng thái.
+
+### Lưu và dựng lại bố cục pane
+
+Chia pane và `cd` cho vừa ý — ví dụ pane trái chạy git, hai pane phải chạy
+Metro và API server — rồi `Ctrl+A` `Shift+S`, gõ tên, `Enter`.
+
+Lần sau `Ctrl+A` `Shift+R` rồi chọn tên đó: dựng lại đúng số pane, đúng tỉ lệ,
+mỗi pane mở đúng thư mục cũ.
+
+Session dựng vào workspace trùng tên với nó. Workspace đó đang mở sẵn thì chỉ
+chuyển sang chứ không dựng lại, tránh nhân đôi tab. `Ctrl+A` `Shift+D` để xoá
+một bản đã lưu.
+
+### Đổi theme
+
+`Ctrl+A` `T`, gõ để lọc, `Enter`. Mọi cửa sổ đang mở đổi màu ngay. Dòng đầu
+danh sách là "Về mặc định".
+
+### Chỉnh kích thước pane
+
+`Ctrl+A` `R` để vào chế độ resize — huy hiệu đỏ `RESIZE` hiện trên thanh tab.
+Bấm `h` `j` `k` `l` hoặc mũi tên bao nhiêu lần tuỳ ý; `Esc`, `Enter` hoặc `q` để thoát.
+
 ## Phím tắt
 
-Bấm `Ctrl+A` rồi thả ra, sau đó bấm phím lệnh. Trong lúc chờ, status bar hiện
-huy hiệu vàng `LEADER`; sau 1,5 giây không bấm gì thì tự huỷ.
+Leader là `Ctrl+A`: bấm rồi thả ra, sau đó mới bấm phím lệnh. Trong lúc chờ,
+thanh tab hiện huy hiệu vàng `LEADER`; sau 1,5 giây không bấm gì thì tự huỷ.
+
+### Tab
 
 | Phím | Việc |
 | --- | --- |
-| `Ctrl+Shift+T` / `W` | tab mới / đóng tab |
-| `Alt+1..8`, `Alt+9` | nhảy tới tab thứ n / tab cuối |
-| `Ctrl+Shift+D` / `E` | chia pane dọc / ngang |
-| `Alt+←↑↓→` hoặc `Alt+hjkl` | chuyển pane |
-| `Ctrl+Shift+Z` | phóng to pane |
-| `Ctrl+C` | có bôi đen thì copy, không thì gửi SIGINT |
-| `Ctrl+Shift+F` / `K` | tìm trong scrollback / xoá scrollback |
-| `Ctrl+Shift+P` | launcher: shell, workspace, thư mục code |
-| `Ctrl+Shift+R` | nạp lại config |
-| **`Ctrl+A W`** | **mở project** — fuzzy search mọi git repo |
-| `Ctrl+A Shift+W` | tạo workspace trống |
-| `Ctrl+A [` `]` | workspace trước / kế tiếp |
-| **`Ctrl+A Shift+S`** | **lưu session** với tên tự đặt |
-| **`Ctrl+A Shift+R`** | **khôi phục session** |
-| `Ctrl+A Shift+D` | xoá session đã lưu |
-| `Ctrl+A R` | chế độ resize (`hjkl` / mũi tên, `Esc` thoát) |
-| `Ctrl+A P` / `S` | chọn pane / hoán đổi pane |
-| `Ctrl+A \|` `\` `-` | chia pane kiểu tmux |
-| `Ctrl+A ,` | đổi tên tab |
-| `Ctrl+A K` | command palette |
-| **`Ctrl+A T`** | **chọn theme** — fuzzy search mọi color scheme của WezTerm |
-| `Ctrl+A A` | gửi `Ctrl+A` thật xuống shell |
+| `Ctrl+Shift+T` | tab mới, kế thừa thư mục hiện tại |
+| `Ctrl+Shift+W` | đóng tab, có hỏi lại nếu còn tiến trình chạy |
+| `Alt+1` … `Alt+8` | nhảy tới tab thứ 1–8 |
+| `Alt+9` | nhảy tới tab cuối cùng, dù đang có bao nhiêu tab |
+| `Ctrl+Tab` | tab kế tiếp |
+| `Ctrl+Shift+Tab` | tab trước |
+| `Ctrl+Shift+PgUp` / `PgDn` | kéo tab hiện tại sang trái / phải |
 
-Xem đầy đủ, gồm cả mặc định của WezTerm: `wezterm show-keys`.
+### Pane
+
+| Phím | Việc |
+| --- | --- |
+| `Ctrl+Shift+D` | chia dọc — pane mới nằm bên phải |
+| `Ctrl+Shift+E` | chia ngang — pane mới nằm bên dưới |
+| `Alt+←` `↑` `↓` `→` | chuyển pane theo hướng |
+| `Alt+h` `j` `k` `l` | chuyển pane, kiểu vim |
+| `Ctrl+Shift+Z` | phóng to pane ra cả tab, bấm lại để thu về |
+| `Ctrl+Shift+Q` | đóng pane, có hỏi lại |
+
+### Copy, dán, tìm
+
+| Phím | Việc |
+| --- | --- |
+| `Ctrl+C` | đang bôi đen thì copy; không thì gửi SIGINT như bình thường |
+| `Ctrl+Shift+C` | copy |
+| `Ctrl+V` / `Ctrl+Shift+V` | dán |
+| chuột phải | dán |
+| `Ctrl+Shift+F` | tìm trong scrollback (lưu 25 000 dòng) |
+| `Ctrl+Shift+X` | copy mode — chọn văn bản bằng bàn phím |
+| `Ctrl+Shift+Space` | quick select — gắn nhãn mọi URL và đường dẫn, bấm 1–2 chữ để copy |
+| `Ctrl+Shift+K` | xoá sạch scrollback |
+| `Ctrl` + click | mở link dưới con trỏ |
+| `Shift+PgUp` / `PgDn` | cuộn lên / xuống một trang |
+
+### Cửa sổ và config
+
+| Phím | Việc |
+| --- | --- |
+| `Ctrl+Shift+P` | launcher — shell, workspace, thư mục code |
+| `Ctrl+Shift+N` | cửa sổ mới |
+| `Ctrl+Shift+R` | nạp lại config sau khi sửa file |
+| `Alt+Enter` | toàn màn hình |
+| `Ctrl+=` / `Ctrl+-` / `Ctrl+0` | cỡ chữ to hơn / nhỏ hơn / về mặc định |
+
+### Leader — project và workspace
+
+| Phím | Việc |
+| --- | --- |
+| `Ctrl+A` `W` | **mở project** — fuzzy search mọi git repo |
+| `Ctrl+A` `Shift+W` | tạo workspace trống, tên tự đặt |
+| `Ctrl+A` `[` / `]` | workspace trước / kế tiếp |
+
+### Leader — session
+
+| Phím | Việc |
+| --- | --- |
+| `Ctrl+A` `Shift+S` | **lưu** bố cục hiện tại thành session có tên |
+| `Ctrl+A` `Shift+R` | **khôi phục** session |
+| `Ctrl+A` `Shift+D` | xoá một session đã lưu |
+
+### Leader — pane
+
+| Phím | Việc |
+| --- | --- |
+| `Ctrl+A` `\|` hoặc `\` | chia dọc — dùng `\` thì khỏi giữ `Shift` |
+| `Ctrl+A` `-` | chia ngang |
+| `Ctrl+A` `R` | chế độ resize — `hjkl` hoặc mũi tên; `Esc` / `Enter` / `q` để thoát |
+| `Ctrl+A` `P` | gắn nhãn `a s d f…` lên từng pane, bấm chữ để nhảy tới |
+| `Ctrl+A` `S` | cũng gắn nhãn, nhưng để hoán đổi vị trí với pane đang đứng |
+| `Ctrl+A` `O` | xoay vòng vị trí các pane |
+| `Ctrl+A` `Z` | phóng to pane |
+| `Ctrl+A` `X` | đóng pane |
+
+### Leader — tab và tiện ích
+
+| Phím | Việc |
+| --- | --- |
+| `Ctrl+A` `C` | tab mới |
+| `Ctrl+A` `,` | đổi tên tab — tên này được lưu vào session |
+| `Ctrl+A` `T` | **chọn theme** |
+| `Ctrl+A` `K` | command palette — tra mọi lệnh WezTerm khi quên phím |
+| `Ctrl+A` `L` | launcher |
+| `Ctrl+A` `F` | tìm trong scrollback |
+| `Ctrl+A` `U` | bảng chọn ký tự và emoji, chọn xong tự copy |
+| `Ctrl+A` `A` | gửi `Ctrl+A` thật xuống shell (PSReadLine: về đầu dòng) |
+
+Các phím mặc định của WezTerm vẫn còn nguyên, gồm cả nhóm `Cmd` trên macOS.
+Xem đầy đủ bằng `wezterm show-keys`, thêm `--lua` để lấy dạng dán được vào config.
 
 ## Theme
 
