@@ -70,7 +70,8 @@ end)
 -- STATUS BAR
 ----------------------------------------------------------------------
 wezterm.on("update-status", function(window, pane)
-	local previewing = picker.preview_scheme(window:window_id())
+	picker.rearm_if_needed(window, pane)
+	local previewing = picker.preview_scheme(window)
 	local p = (previewing and theme.for_scheme(previewing)) or theme.current()
 
 	------------------------------------------------------------------
@@ -78,7 +79,7 @@ wezterm.on("update-status", function(window, pane)
 	------------------------------------------------------------------
 	local left = {}
 	local kt = window:active_key_table()
-	local theme_label = picker.browsing_label(window:window_id())
+	local theme_label = picker.browsing_label(window)
 	if theme_label then
 		table.insert(left, { Background = { Color = p.mauve } })
 		table.insert(left, { Foreground = { Color = p.crust } })

@@ -185,8 +185,13 @@ function M.for_config(cfg)
 	return M.current()
 end
 
+local list_cache = nil
+
 --- Toàn bộ tên scheme: ưa dùng trước, còn lại xếp theo bảng chữ cái.
 function M.list_all()
+	if list_cache then
+		return list_cache
+	end
 	local schemes = M.builtin_schemes()
 	local seen, ordered = {}, {}
 	for _, name in ipairs(M.favourites) do
@@ -207,6 +212,7 @@ function M.list_all()
 	for _, name in ipairs(rest) do
 		table.insert(ordered, name)
 	end
+	list_cache = ordered
 	return ordered
 end
 

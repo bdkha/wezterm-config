@@ -219,6 +219,12 @@ nguyên sau khi khởi động lại.
 chuyển, nên không xem trước bên trong nó được. Vì vậy việc duyệt dùng key table
 riêng, còn fuzzy search vẫn là `InputSelector`, mở bằng phím `/`.
 
+Thêm một chỗ nữa: `set_config_overrides` bắt WezTerm tính lại config cho cửa sổ,
+và việc đó **xoá key table đang active** — nên nếu không xử lý thì đi được đúng
+một bước rồi mũi tên rơi xuống shell. Config bật lại bảng phím từ sự kiện
+`window-config-reloaded`, tức là sau khi tính xong, và không giữ state nào trong
+Lua: vị trí đang duyệt đọc thẳng từ `color_scheme` trong overrides của cửa sổ.
+
 Mocha và Latte có bảng màu chỉnh tay. Các scheme còn lại được suy ra từ chính
 nó — nền, chữ và 8 màu ANSI — nên powerline trên status bar luôn hợp tông với
 scheme đang dùng, kể cả theme sáng.
