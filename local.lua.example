@@ -1,0 +1,22 @@
+-- Ghi đè cấu hình cho riêng máy này.
+--
+-- Chép file này thành  local.lua  (đã nằm trong .gitignore) rồi sửa.
+-- Mọi khoá trong wezterm.lua đều ghi đè được; khoá nào không khai báo
+-- thì giữ nguyên mặc định.
+
+return {
+	-- font_size = 13.5,
+
+	-- Nền trong + hiệu ứng mờ (tự chọn Acrylic trên Windows, blur trên macOS)
+	-- opacity = 0.92,
+
+	-- Máy nào WebGpu dựng hình lỗi thì mở dòng này
+	-- front_end = "OpenGL",
+
+	-- Thư mục chứa code trên máy này. Thư mục không tồn tại sẽ tự bị bỏ qua,
+	-- nên liệt kê thoải mái.
+	-- project_roots = {
+	-- 	"D:/Code",
+	-- 	"D:/Product",
+	-- },
+}
