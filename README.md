@@ -7,7 +7,7 @@ chuyển project bằng fuzzy search, lưu và khôi phục nguyên bố cục p
 - Status bar hiện workspace, nhánh git và thư mục hiện tại
 - `Ctrl+A W` mở fuzzy switcher quét mọi git repo trong thư mục code của bạn
 - `Ctrl+A Shift+S` / `Shift+R` lưu và dựng lại bố cục pane, đúng tỉ lệ, đúng thư mục
-- Catppuccin Mocha / Latte, tự đổi theo theme hệ điều hành
+- `Ctrl+A T` chọn theme từ hơn 1000 color scheme có sẵn của WezTerm
 
 ## Cài đặt
 
@@ -49,7 +49,7 @@ cp local.lua.example local.lua
 ```lua
 return {
 	font_size = 13.5,
-	theme = "dark",                     -- "auto" | "dark" | "light"
+	theme = "Tokyo Night",              -- tên scheme bất kỳ, hoặc "auto"
 	opacity = 0.92,                     -- nền trong + mờ hậu cảnh
 	project_roots = { "D:/Code", "D:/Product" },
 }
@@ -85,9 +85,28 @@ huy hiệu vàng `LEADER`; sau 1,5 giây không bấm gì thì tự huỷ.
 | `Ctrl+A \|` `\` `-` | chia pane kiểu tmux |
 | `Ctrl+A ,` | đổi tên tab |
 | `Ctrl+A K` | command palette |
+| **`Ctrl+A T`** | **chọn theme** — fuzzy search mọi color scheme của WezTerm |
 | `Ctrl+A A` | gửi `Ctrl+A` thật xuống shell |
 
 Xem đầy đủ, gồm cả mặc định của WezTerm: `wezterm show-keys`.
+
+## Theme
+
+Mặc định là **Catppuccin Mocha**, không dò theo hệ điều hành.
+
+`Ctrl+A T` mở picker liệt kê hơn 1000 color scheme có sẵn của WezTerm, vài cái
+hay dùng được đẩy lên đầu. Chọn xong thì mọi cửa sổ đang mở đổi màu ngay, và
+lựa chọn được ghi vào `theme.txt` (gitignore) nên còn nguyên sau khi khởi động lại.
+
+Mocha và Latte có bảng màu chỉnh tay. Các scheme còn lại được suy ra từ chính
+nó — nền, chữ và 8 màu ANSI — nên powerline trên status bar luôn hợp tông với
+scheme đang dùng, kể cả theme sáng.
+
+Thứ tự ưu tiên: `theme.txt` → `theme` trong `local.lua` → mặc định. Chọn
+"Về mặc định" trong picker là xoá `theme.txt`.
+
+Đặt `theme = "auto"` nếu muốn theo hệ điều hành. Trên Windows, theme được đọc
+thẳng từ registry vì `wezterm.gui.get_appearance()` trả sai khi chưa có cửa sổ nào.
 
 ## Session
 
@@ -131,7 +150,8 @@ PROMPT_COMMAND='printf "\033]7;file://%s%s\033\\" "$HOSTNAME" "$PWD"'
 wezterm.lua            điểm vào, mặc định có thể ghi đè
 config/
   platform.lua         nhận diện hệ điều hành
-  theme.lua            bảng màu Catppuccin, tự đổi sáng/tối
+  theme.lua            bảng màu, suy màu status bar từ scheme đang dùng
+  theme_picker.lua     picker chọn theme (Ctrl+A T)
   util.lua             đọc cwd, nhánh git, icon theo tiến trình
   appearance.lua       font, cửa sổ, render
   launch.lua           shell mặc định và launcher, theo từng OS
@@ -151,6 +171,6 @@ local.lua.example      mẫu ghi đè cho từng máy
 | Tab và status bar hiện ô vuông | Chưa có Nerd Font. Chạy installer với `--font` / `-Font`, rồi mở lại WezTerm |
 | Thư mục trên status bar đứng im | Shell chưa phát OSC 7, xem mục trên |
 | Cửa sổ nhấp nháy, dựng hình sai | Đặt `front_end = "OpenGL"` trong `local.lua` |
-| Nền sáng trắng dù hệ thống để dark | Đặt `theme = "dark"` trong `local.lua`. Trên Windows theme được đọc thẳng từ registry vì `wezterm.gui.get_appearance()` trả sai khi chưa có cửa sổ nào |
+| Màu không như mong đợi | `Ctrl+A T` chọn lại, hoặc xoá `theme.txt` để về mặc định |
 | Sửa config mà không thấy đổi | Nhiều khả năng lỗi cú pháp. Chạy `wezterm ls-fonts` để đọc lỗi kèm số dòng |
 | `Ctrl+A` không về đầu dòng nữa | Đúng thiết kế, nó là leader. Bấm `Ctrl+A` rồi `A` để gửi xuống shell |

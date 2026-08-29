@@ -3,6 +3,7 @@ local wezterm = require("wezterm")
 local act = wezterm.action
 local ws = require("config.workspaces")
 local sessions = require("config.sessions")
+local theme_picker = require("config.theme_picker")
 
 local M = {}
 
@@ -129,6 +130,7 @@ function M.apply(config)
 			action = act.ShowLauncherArgs({ flags = "FUZZY|LAUNCH_MENU_ITEMS|DOMAINS|WORKSPACES" }),
 		},
 		{ key = "u", mods = "LEADER", action = act.CharSelect({ copy_on_select = true }) },
+		{ key = "t", mods = "LEADER", action = theme_picker.pick },
 
 		-- vào chế độ resize
 		{

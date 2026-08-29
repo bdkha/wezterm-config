@@ -1,6 +1,9 @@
 # Ghi đè theo từng máy — mỗi máy một bản, không đồng bộ
 local.lua
 
+# Theme chọn qua Ctrl+A T — thuộc về từng máy
+theme.txt
+
 # Session là dữ liệu riêng của từng máy: chứa đường dẫn thật trên đĩa
 sessions/*
 !sessions/.gitkeep

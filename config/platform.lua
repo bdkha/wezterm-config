@@ -11,6 +11,7 @@ M.is_mac = triple:find("darwin") ~= nil
 M.is_linux = triple:find("linux") ~= nil
 
 M.home = (os.getenv("HOME") or os.getenv("USERPROFILE") or ""):gsub("\\", "/"):gsub("/+$", "")
+M.config_dir = (wezterm.config_dir or ""):gsub("\\", "/"):gsub("/+$", "")
 
 --- File có tồn tại và đọc được không. Dùng để dò shell đã cài chưa.
 function M.exists(path)

@@ -28,8 +28,10 @@ local platform = require("config.platform")
 local opts = {
 	font_size = 12.0,
 
-	-- "auto" theo hệ điều hành, hoặc ghim cứng "dark" / "light".
-	theme = "auto",
+	-- Theme mặc định. Nhận tên bất kỳ color scheme nào WezTerm có sẵn,
+	-- hoặc "auto" để theo hệ điều hành.
+	-- Ctrl+A T mở picker và ghi lựa chọn vào theme.txt, ghi đè dòng này.
+	theme = "Catppuccin Mocha",
 
 	-- 1.0 = nền đục hoàn toàn. Hạ xuống ~0.92 để nền trong,
 	-- hiệu ứng mờ sẽ tự bật theo hệ điều hành.
