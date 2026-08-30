@@ -58,6 +58,13 @@ function M.apply(config, opts)
 	----------------------------------------------------------------------
 	config.color_scheme = p.scheme
 	config.colors = theme.colors_for(p)
+
+	-- Ép tương phản tối thiểu giữa chữ và nền của từng ô. Giữ cho các theme
+	-- được suy ra tự động — nhất là theme sáng — không bị chữ chìm vào nền.
+	-- Đặt nil trong local.lua để tắt, giữ nguyên màu gốc của scheme.
+	if platform.has.min_contrast then
+		config.text_min_contrast_ratio = opts.text_min_contrast_ratio
+	end
 	config.inactive_pane_hsb = { saturation = 0.9, brightness = 0.75 }
 
 	----------------------------------------------------------------------

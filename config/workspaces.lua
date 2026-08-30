@@ -1,6 +1,7 @@
 -- Workspace theo project: quét git repo trong các thư mục code, mở fuzzy switcher.
 local wezterm = require("wezterm")
 local act = wezterm.action
+local platform = require("config.platform")
 
 local M = {}
 
@@ -101,17 +102,24 @@ M.create = act.PromptInputLine({
 	end),
 })
 
---- Đổi tên tab hiện tại.
-M.rename_tab = act.PromptInputLine({
-	description = wezterm.format({
-		{ Attribute = { Intensity = "Bold" } },
-		{ Text = "Tên tab:" },
-	}),
-	action = wezterm.action_callback(function(window, _pane, line)
-		if line then
-			window:active_tab():set_title(line)
-		end
-	end),
-})
+--- Đổi tên tab hiện tại, điền sẵn tên đang có để sửa thay vì gõ lại.
+M.rename_tab = wezterm.action_callback(function(window, pane)
+	local args = {
+		description = wezterm.format({
+			{ Attribute = { Intensity = "Bold" } },
+			{ Text = "Tên tab:" },
+		}),
+		action = wezterm.action_callback(function(win, _p, line)
+			if line then
+				win:active_tab():set_title(line)
+			end
+		end),
+	}
+	if platform.has.prompt_initial_value then
+		args.prompt = "> "
+		args.initial_value = window:active_tab():get_title()
+	end
+	window:perform_action(act.PromptInputLine(args), pane)
+end)
 
 return M

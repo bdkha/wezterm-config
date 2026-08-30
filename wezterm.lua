@@ -42,6 +42,10 @@ local opts = {
 	-- macOS: độ mờ hậu cảnh, 0–100
 	blur = 30,
 
+	-- Tương phản tối thiểu giữa chữ và nền mỗi ô; WCAG AA là 4.5.
+	-- Chỉ tác động khi ô có chữ và nền khác màu. Đặt nil để tắt hẳn.
+	text_min_contrast_ratio = 4.5,
+
 	-- "WebGpu" nhanh hơn. Máy nào dựng hình lỗi thì đổi thành "OpenGL".
 	front_end = "WebGpu",
 	max_fps = 120,

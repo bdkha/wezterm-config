@@ -48,4 +48,44 @@ function M.mkdir(path)
 	end
 end
 
+----------------------------------------------------------------------
+--  TÍNH NĂNG CHỈ CÓ Ở BẢN NIGHTLY
+--  Dò một lần lúc nạp config, để repo này còn cài được lên máy đang chạy
+--  bản stable 20240203 mà không vỡ.
+----------------------------------------------------------------------
+local function supported(probe)
+	return (pcall(probe))
+end
+
+M.has = {
+	-- PromptInputLine nhận prompt / initial_value
+	prompt_initial_value = supported(function()
+		return wezterm.action.PromptInputLine({
+			description = "",
+			initial_value = "",
+			action = wezterm.action_callback(function() end),
+		})
+	end),
+
+	-- Action Confirmation (hộp hỏi lại)
+	confirmation = supported(function()
+		return wezterm.action.Confirmation({
+			message = "",
+			action = wezterm.action_callback(function() end),
+		})
+	end),
+
+	-- Màu riêng cho nhãn của InputSelector và Launcher
+	picker_label_colors = supported(function()
+		local probe = wezterm.config_builder()
+		probe.colors = { input_selector_label_bg = { Color = "#000000" } }
+	end),
+
+	-- text_min_contrast_ratio
+	min_contrast = supported(function()
+		local probe = wezterm.config_builder()
+		probe.text_min_contrast_ratio = 4.5
+	end),
+}
+
 return M

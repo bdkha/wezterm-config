@@ -159,7 +159,7 @@ end
 --- Khối config.colors ứng với một bảng màu. appearance.lua dùng lúc nạp config,
 --- picker dùng lại y hệt khi preview, để hai đường không lệch nhau.
 function M.colors_for(palette)
-	return {
+	local colors = {
 		cursor_bg = palette.accent,
 		cursor_border = palette.accent,
 		cursor_fg = palette.crust,
@@ -170,7 +170,20 @@ function M.colors_for(palette)
 			background = palette.mantle,
 			inactive_tab_edge = palette.mantle,
 		},
+
 	}
+
+	-- Nhãn của picker và launcher đi theo theme luôn, thay vì màu mặc định.
+	-- Bốn khoá này bắt buộc dạng { Color = ... }; chuỗi thuần bị từ chối.
+	-- Chỉ có ở bản nightly, nên bản cũ thì bỏ qua chứ không làm vỡ config.
+	if platform.has.picker_label_colors then
+		colors.input_selector_label_bg = { Color = palette.accent }
+		colors.input_selector_label_fg = { Color = palette.crust }
+		colors.launcher_label_bg = { Color = palette.mauve }
+		colors.launcher_label_fg = { Color = palette.crust }
+	end
+
+	return colors
 end
 
 --- Bảng màu ứng với config hiệu lực của một cửa sổ. Nhờ hàm này mà tab bar

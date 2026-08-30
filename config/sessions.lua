@@ -214,17 +214,27 @@ local function write_session(window, name)
 	notify(window, "Đã lưu session", string.format("%s — %d tab, %d pane", name, #session.tabs, n))
 end
 
-M.save = act.PromptInputLine({
-	description = wezterm.format({
-		{ Attribute = { Intensity = "Bold" } },
-		{ Text = "Lưu session với tên:" },
-	}),
-	action = wezterm.action_callback(function(window, _pane, line)
-		if line and #line > 0 then
-			write_session(window, line)
-		end
-	end),
-})
+--- Điền sẵn tên workspace đang mở, vì hầu hết session trùng tên với project
+--- đang làm. Phải dựng PromptInputLine lúc bấm phím chứ không dựng sẵn được,
+--- do initial_value phụ thuộc vào cửa sổ.
+M.save = wezterm.action_callback(function(window, pane)
+	local args = {
+		description = wezterm.format({
+			{ Attribute = { Intensity = "Bold" } },
+			{ Text = "Lưu session với tên:" },
+		}),
+		action = wezterm.action_callback(function(win, _p, line)
+			if line and #line > 0 then
+				write_session(win, line)
+			end
+		end),
+	}
+	if platform.has.prompt_initial_value then
+		args.prompt = "> "
+		args.initial_value = window:active_workspace()
+	end
+	window:perform_action(act.PromptInputLine(args), pane)
+end)
 
 ----------------------------------------------------------------------
 --  KHÔI PHỤC
@@ -376,10 +386,38 @@ M.restore = wezterm.action_callback(function(window, pane)
 	pick(window, pane, "Khôi phục session", restore_session)
 end)
 
+--- Xoá là thao tác không lùi lại được, nên hỏi lại một nhịp.
 M.delete = wezterm.action_callback(function(window, pane)
-	pick(window, pane, "Xoá session đã lưu", function(win, _p, path)
-		local okr = os.remove(path)
-		notify(win, "WezTerm", okr and ("Đã xoá " .. path:match("([^/]+)%.json$")) or "Xoá thất bại.")
+	pick(window, pane, "Xoá session đã lưu", function(win, p, path)
+		local name = path:match("([^/]+)%.json$") or path
+
+		local function do_remove(w)
+			local removed = os.remove(path)
+			notify(w, "WezTerm", removed and ("Đã xoá " .. name) or "Xoá thất bại.")
+		end
+
+		-- Bản cũ không có Confirmation thì xoá thẳng, coi như bước chọn trong
+		-- danh sách đã là xác nhận.
+		if not platform.has.confirmation then
+			do_remove(win)
+			return
+		end
+
+		win:perform_action(
+			act.Confirmation({
+				message = wezterm.format({
+					{ Attribute = { Intensity = "Bold" } },
+					{ Foreground = { AnsiColor = "Red" } },
+					{ Text = "Xoá session " },
+					{ Foreground = { AnsiColor = "Yellow" } },
+					{ Text = name },
+					{ Foreground = { AnsiColor = "Red" } },
+					{ Text = " ? Không lấy lại được." },
+				}),
+				action = wezterm.action_callback(do_remove),
+			}),
+			p
+		)
 	end)
 end)
 

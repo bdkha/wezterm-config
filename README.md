@@ -38,6 +38,19 @@ thì icon và mũi tên powerline sẽ hiện thành ô vuông.
 > Trên Windows, đóng hết cửa sổ WezTerm trước khi chạy installer — WezTerm giữ
 > thư mục config nên không đổi tên được khi đang mở.
 
+### Nên dùng bản nightly
+
+WezTerm chưa ra bản stable nào kể từ `20240203`, nên nightly mới là bản được
+dùng hằng ngày. Config này **chạy được trên cả hai**: những tính năng chỉ có ở
+nightly được dò lúc nạp config và tự bỏ qua nếu build không hỗ trợ.
+
+Chỉ có ở nightly: điền sẵn tên khi lưu session và đổi tên tab, hộp hỏi lại
+trước khi xoá session, nhãn picker nhuộm theo theme, và `text_min_contrast_ratio`.
+
+```powershell
+winget install wez.wezterm.nightly
+```
+
 ## Chỉnh riêng cho từng máy
 
 `local.lua` nằm trong `.gitignore`, dùng để ghi đè mà không đụng vào repo:
@@ -50,6 +63,7 @@ cp local.lua.example local.lua
 return {
 	font_size = 13.5,
 	theme = "Tokyo Night",              -- tên scheme bất kỳ, hoặc "auto"
+	text_min_contrast_ratio = 4.5,      -- nil để tắt, giữ nguyên màu scheme
 	opacity = 0.92,                     -- nền trong + mờ hậu cảnh
 	project_roots = { "D:/Code", "D:/Product" },
 }
@@ -77,6 +91,9 @@ thanh trạng thái.
 
 Chia pane và `cd` cho vừa ý — ví dụ pane trái chạy git, hai pane phải chạy
 Metro và API server — rồi `Ctrl+A` `Shift+S`, gõ tên, `Enter`.
+
+Ô nhập điền sẵn tên workspace đang mở, thường là đúng cái bạn muốn — sửa hoặc
+`Enter` luôn.
 
 Lần sau `Ctrl+A` `Shift+R` rồi chọn tên đó: dựng lại đúng số pane, đúng tỉ lệ,
 mỗi pane mở đúng thư mục cũ.
@@ -175,7 +192,7 @@ thanh tab hiện huy hiệu vàng `LEADER`; sau 1,5 giây không bấm gì thì 
 | --- | --- |
 | `Ctrl+A` `Shift+S` | **lưu** bố cục hiện tại thành session có tên |
 | `Ctrl+A` `Shift+R` | **khôi phục** session |
-| `Ctrl+A` `Shift+D` | xoá một session đã lưu |
+| `Ctrl+A` `Shift+D` | xoá một session đã lưu, có hỏi lại |
 
 ### Leader — pane
 
@@ -195,7 +212,7 @@ thanh tab hiện huy hiệu vàng `LEADER`; sau 1,5 giây không bấm gì thì 
 | Phím | Việc |
 | --- | --- |
 | `Ctrl+A` `C` | tab mới |
-| `Ctrl+A` `,` | đổi tên tab — tên này được lưu vào session |
+| `Ctrl+A` `,` | đổi tên tab, điền sẵn tên cũ — tên này được lưu vào session |
 | `Ctrl+A` `T` | **chọn theme** — vào chế độ duyệt có xem trước |
 | `Ctrl+A` `K` | command palette — tra mọi lệnh WezTerm khi quên phím |
 | `Ctrl+A` `L` | launcher |
