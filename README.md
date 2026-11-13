@@ -266,9 +266,12 @@ Không lưu được: nội dung màn hình, tiến trình đang chạy, và tr�
 ## Thư mục hiện tại (OSC 7)
 
 Status bar, tên tab, nhánh git và session đều cần shell báo thư mục hiện tại
-qua OSC 7. zsh và fish làm sẵn; bash và PowerShell thì không.
+qua OSC 7. Tab/pane mới cũng nhờ nó mà mở đúng thư mục của pane đang đứng.
+zsh và fish làm sẵn; bash và PowerShell thì không.
 
-**PowerShell** — thêm vào `$PROFILE`:
+**PowerShell** — trong WezTerm trên Windows đã có sẵn: `config/launch.lua`
+chạy PowerShell kèm hook OSC 7, bọc prompt đang có (kể cả prompt do `$PROFILE`
+đặt). Chỉ cần đoạn dưới khi dùng PowerShell ngoài cấu hình này, thêm vào `$PROFILE`:
 
 ```powershell
 function Prompt {
