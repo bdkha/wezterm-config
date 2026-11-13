@@ -17,6 +17,13 @@
 -- ============================================================================
 
 local wezterm = require("wezterm")
+
+-- WezTerm chỉ nhét ~/.config/wezterm vào package.path, kể cả khi config được
+-- nạp từ chỗ khác (WEZTERM_CONFIG_FILE hoặc --config-file). Thêm thư mục của
+-- chính file này vào để require("config.*") luôn tìm thấy.
+local self_dir = (wezterm.config_dir or ""):gsub("\\", "/"):gsub("/+$", "")
+package.path = self_dir .. "/?.lua;" .. self_dir .. "/?/init.lua;" .. package.path
+
 local config = wezterm.config_builder()
 local platform = require("config.platform")
 

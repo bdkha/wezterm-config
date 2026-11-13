@@ -28,9 +28,20 @@ cd ~/Code/wezterm-config
 .\install.ps1 -Font
 ```
 
-Script sẽ trỏ `~/.config/wezterm` vào thư mục repo bằng symlink — trên Windows
-rơi về junction nếu máy chưa bật Developer Mode, nên không cần quyền quản trị.
-Config cũ được đổi tên thành `wezterm.backup.<thời gian>` chứ không bị xoá.
+Script sẽ trỏ `~/.config/wezterm` vào thư mục repo bằng symlink. Config cũ được
+đổi tên thành `wezterm.backup.<thời gian>` chứ không bị xoá.
+
+Trên Windows, máy chưa bật Developer Mode thì không tạo được symlink; khi đó
+script đặt biến môi trường user `WEZTERM_CONFIG_FILE` trỏ thẳng vào
+`wezterm.lua` trong repo, không cần quyền quản trị. Đăng xuất rồi đăng nhập lại
+để WezTerm thấy biến này. Bật Developer Mode (*Settings > System > For
+developers*) rồi chạy lại script thì sẽ chuyển sang symlink và tự xoá biến đó.
+
+> Script **không** dùng junction nữa. Bản WezTerm mới bật mitigation
+> *ProcessRedirectionTrustPolicy* của Windows nên từ chối đi qua junction do
+> user thường tạo, báo lỗi `os error 448` (`ERROR_UNTRUSTED_MOUNT_POINT`). Máy
+> nào đang dính lỗi này thì chạy lại `install.ps1` — nó sẽ gỡ junction cũ và
+> chuyển sang cách khác.
 
 Bỏ `--font` / `-Font` nếu máy đã có **JetBrainsMono Nerd Font**. Thiếu font này
 thì icon và mũi tên powerline sẽ hiện thành ô vuông.

@@ -3,9 +3,13 @@
     Cài config WezTerm này trên Windows.
 
 .DESCRIPTION
-    Trỏ %USERPROFILE%\.config\wezterm vào thư mục repo bằng symlink
-    (rơi về junction nếu máy chưa bật Developer Mode — junction không cần
-    quyền quản trị). Config cũ được đổi tên thành .backup.<thời gian>.
+    Trỏ %USERPROFILE%\.config\wezterm vào thư mục repo bằng symlink.
+    Máy chưa bật Developer Mode thì không tạo được symlink; khi đó script
+    đặt biến môi trường user WEZTERM_CONFIG_FILE trỏ thẳng vào wezterm.lua
+    trong repo. Không dùng junction: bản WezTerm mới bật mitigation
+    ProcessRedirectionTrustPolicy của Windows nên từ chối đi qua junction do
+    user thường tạo, báo lỗi 448 ERROR_UNTRUSTED_MOUNT_POINT.
+    Config cũ được đổi tên thành .backup.<thời gian>.
 
 .PARAMETER Font
     Tải và cài JetBrainsMono Nerd Font cho user hiện tại. Không cần admin.
@@ -29,13 +33,34 @@ Write-Host "repo   : $repo"
 Write-Host "target : $target"
 
 # ── Liên kết thư mục config ────────────────────────────────────────────────
-$existing = Get-Item $target -Force -ErrorAction SilentlyContinue
+$entry   = Join-Path $repo 'wezterm.lua'
+$envName = 'WEZTERM_CONFIG_FILE'
+$envVal  = [Environment]::GetEnvironmentVariable($envName, 'User')
 
-if ($existing -and $existing.Target -and ($existing.Target -eq $repo)) {
-    Write-Host "Da tro dung vao repo roi, khong can lam gi." -ForegroundColor Green
+$existing = Get-Item $target -Force -ErrorAction SilentlyContinue
+$isLink   = $existing -and ($existing.Attributes -band [IO.FileAttributes]::ReparsePoint)
+$linkTo   = if ($isLink) { [string](@($existing.Target)[0]) } else { $null }
+
+if ($isLink -and $existing.LinkType -eq 'SymbolicLink' -and $linkTo -eq $repo) {
+    Write-Host "Da tro dung vao repo bang symlink roi, khong can lam gi." -ForegroundColor Green
+    $mode = 'symlink'
 }
 else {
-    if ($existing) {
+    if ($isLink) {
+        # Ke ca junction dang tro dung repo cung phai bo: WezTerm moi khong
+        # di qua junction do user thuong tao (loi 448).
+        try {
+            $existing.Delete()
+            Write-Host "Da go lien ket cu ($($existing.LinkType)) tai $target" -ForegroundColor Yellow
+        }
+        catch {
+            Write-Host ""
+            Write-Host "Khong go duoc lien ket cu tai $target" -ForegroundColor Red
+            Write-Host "Dong het cua so WezTerm roi chay lai script nay."
+            exit 1
+        }
+    }
+    elseif ($existing) {
         $backupName = "wezterm.backup." + (Get-Date -Format 'yyyyMMddHHmmss')
         try {
             Rename-Item -Path $target -NewName $backupName -ErrorAction Stop
@@ -56,16 +81,39 @@ else {
     try {
         New-Item -ItemType SymbolicLink -Path $target -Target $repo -ErrorAction Stop | Out-Null
         $mode = 'symlink'
+        Write-Host "Da lien ket (symlink): $target -> $repo" -ForegroundColor Green
     }
     catch {
-        cmd /c mklink /J "`"$target`"" "`"$repo`"" | Out-Null
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "Tao symlink lan junction deu that bai." -ForegroundColor Red
-            exit 1
-        }
-        $mode = 'junction'
+        $mode = 'envvar'
     }
-    Write-Host "Da lien ket ($mode): $target -> $repo" -ForegroundColor Green
+}
+
+if ($mode -eq 'symlink') {
+    # Bien moi truong khong con can nua, de lai chi gay kho hieu.
+    if ($envVal -eq $entry) {
+        [Environment]::SetEnvironmentVariable($envName, $null, 'User')
+        Write-Host "Da xoa bien $envName (da co symlink, khong can nua)." -ForegroundColor Yellow
+    }
+}
+else {
+    # Khong tao duoc symlink (chua bat Developer Mode, khong co quyen).
+    # Khong rot ve junction: WezTerm moi tra loi 448 khi di qua junction
+    # do user thuong tao. Tro thang bang bien moi truong thay vi vay.
+    [Environment]::SetEnvironmentVariable($envName, $entry, 'User')
+    $env:WEZTERM_CONFIG_FILE = $entry
+
+    Write-Host ""
+    Write-Host "Khong tao duoc symlink (may chua bat Developer Mode)." -ForegroundColor Yellow
+    Write-Host "Da dat bien moi truong user thay the:" -ForegroundColor Green
+    Write-Host "  $envName = $entry"
+    Write-Host ""
+    Write-Host "Dang xuat roi dang nhap lai (hoac khoi dong lai Explorer) de" -ForegroundColor Yellow
+    Write-Host "WezTerm thay bien nay. Muon thu ngay ma khong dang xuat:"
+    Write-Host "  `$env:$envName = '$entry'"
+    Write-Host "  & 'C:\Program Files\WezTerm\wezterm-gui.exe'"
+    Write-Host ""
+    Write-Host "Muon dung symlink cho gon: bat Developer Mode trong"
+    Write-Host "Settings > System > For developers, roi chay lai script nay."
 }
 
 # ── Font ───────────────────────────────────────────────────────────────────
